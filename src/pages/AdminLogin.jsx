@@ -5,12 +5,15 @@ function AdminLogin() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    // const [role, setRole] = useState('admin')
     const [message, setMessage] = useState('')
 
     const handlesAdminLogin = async () => {
         try {
-            const response = await axios.post('https://ezamazwenodejs.onrender.comg /admin-login', { email, password });
+            const response = await axios.post('http://localhost:4000/admin-login', { email });
             setMessage(response.data.message);
+            const userData = (response.data)
+            console.log(userData)
         } catch (error) {
             console.log("Unable to login: ", error);
             setMessage(error)

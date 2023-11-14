@@ -6,9 +6,11 @@ function ResetPassword() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleResetPassword = async () => {
+    const handleResetPassword = async (e) => {
+        e.preventDefault()
+        
         try{
-          const response = await axios.post('http://localhost:4000/reset-password', { email });
+          const response = await axios.post('https://ezamazwenodejs.onrender.com/reset-password', { email });
           setMessage(response.data.message);
         }catch(error){
           console.error('Error resetting password:', error);

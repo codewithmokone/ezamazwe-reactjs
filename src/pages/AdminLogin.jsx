@@ -9,7 +9,7 @@ function AdminLogin() {
 
     const handlesAdminLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/admin-login', { email, password });
+            const response = await axios.post('https://ezamazwenodejs.onrender.comg /admin-login', { email, password });
             setMessage(response.data.message);
         } catch (error) {
             console.log("Unable to login: ", error);

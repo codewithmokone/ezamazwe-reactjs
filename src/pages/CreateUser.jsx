@@ -11,15 +11,15 @@ function CreateUser() {
     const handleCreateUser = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await axios.post('http://localhost:4000/create-user', { email, admin:{role}  });
-            setMessage(response.data.message);
-            console.log("Details: ", email, admin);
-            console.log("Creating user: ", response.data);
-        } catch (error) {
-            console.log("Unable to create user: ", error);
-            setMessage('Unable to create user. Please try again later.');
-        }
+        // try {
+        //     const response = await axios.post('http://localhost:4000/create-user', { email, admin:{role}  });
+        //     setMessage(response.data.message);
+        //     console.log("Details: ", email, admin);
+        //     console.log("Creating user: ", response.data);
+        // } catch (error) {
+        //     console.log("Unable to create user: ", error);
+        //     setMessage('Unable to create user. Please try again later.');
+        // }
     }
 
     return (

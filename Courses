@@ -5,13 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Courses() {
 
+    // const [activeCategory, setActiveCategory] = useState(null);
     const [categoryData, setCategoryData] = useState([]);
+    const navigate = useNavigate();
 
     // Handles fetching courses category 
     const fetchCategoryData = async () => {
-
         try {
-            const querySnapshot = await getDocs(collection(db, "Content"));
+            const querySnapshot = await getDocs(collection(db, "TestCollection"));
             const data = querySnapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data()
@@ -32,6 +33,9 @@ function Courses() {
         <div>
             {categoryData.map((course) => (
                 <div key={course.id}>
+                    {/* <Link onClick={() => navigate(`/grades/${course.id}`)}>
+                        {course.categoryType}
+                    </Link> */}
                     <Link to={{pathname: `/grades/${course.id}`}}>{course.name}</Link>
                 </div>
             ))}

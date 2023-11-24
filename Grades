@@ -1,0 +1,46 @@
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { db } from '../firebase'
+import { collection, doc, getDocs } from 'firebase/firestore'
+
+function Grades() {
+
+  const { id } = useParams()
+  const [gradesData, setGradesData] = useState([]);
+  const navigate = useNavigate()
+
+  const docId = id
+  
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const courseRef = doc(db, 'TestCollection', id);
+        const gradesQuerySnapshot = await getDocs(collection(courseRef, 'Grades'));
+        const gradesData = gradesQuerySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        console.log("Grades Data:", gradesData);
+        setGradesData(gradesData); // Update state with fetched grades data
+      } catch (error) {
+        console.error('Error fetching grades from Firestore:', error);
+      }
+
+    }
+
+    fetchGrades()
+  }, [id])
+
+  return (
+    <div>
+      <h2>Grades for Course ID: {id}</h2>
+      {gradesData.map((grade, key) => (
+        <div key={key} style={{display:'flex', flexDirection:"column"}}>
+          <Link to={{ pathname: `/subjects/${id}` }}>{grade.grades}</Link>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default Grades

@@ -1,63 +1,46 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { db } from '../firebase'
-import { collection, doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 function Grades() {
 
-    const { id } = useParams()
-    const [data, setData] = useState([])
+  const { id } = useParams()
+  const [gradesData, setGradesData] = useState({});
 
-    const navigate = useNavigate()
+  useEffect(() => {
+    const fetchGrades = async () => {
 
-    // const fetchGrades = async () => {
-    //     try {
-    //         const userCollection = collection(db, 'collectionTest');
-    //         const userDocRef = doc(userCollection, item);
-    //         const userDocSnapshot = await getDoc(userDocRef);
-    //         const userInfo = userDocSnapshot.data();
-    //         setData(userInfo)
-    //         console.log("Data", userInfo)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+      try {
+        const gradesRef = doc(db, 'Content', id);
+        const gradesSnapshot = await getDoc(gradesRef);
 
-    // useEffect(() => {
-    //     fetchGrades();
-    // }, [])
+        if (gradesSnapshot.exists()) {
+          const data = gradesSnapshot.data();
 
-    useEffect(() => {
-        const fetchGrades = async () => {
-          try {
-            const userCollectionRef = collection(db, 'collectionTest')
-            const userDocRef = doc(userCollectionRef, id)
-            const userDocSnapshot = await getDoc(userDocRef)
-            
-            if (userDocSnapshot.exists()) {
-              const userInfo = userDocSnapshot.data()
-              setData(userInfo.grades)
-            }
-          } catch (error) {
-            console.log(error)
-          }
+          setGradesData(data); // Update state with fetched grades data
+        } else {
+          console.log('No grades data found');
         }
-    
-        fetchGrades()
-      }, [id])
+      } catch (error) {
+        console.error('Error fetching grades from Firestore:', error);
+      }
 
+    }
 
-    // console.log("Grades: ", data)
+    fetchGrades()
+  }, [id])
 
-    return (
-        <div>
-            {
-                data && data.map((grade, index) => (
-                    <li key={index}><a onClick={()=> {navigate(`/subjets/${grade.gradeName}`)}}>{grade.gradeName}</a></li>
-                ))
-            }
-        </div>
-    )
+  return (
+    <div>
+      <h1>{gradesData.name} Grades</h1>
+      <ul style={{display:'flex', flexDirection:'column'}}>
+        {gradesData.grades && gradesData.grades.map((grade, key) => (
+          <Link key={key} to={{pathname: `/subjects/${id}/${grade}`}}>{grade.replace(/\s/g, '_')}</Link>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
 export default Grades

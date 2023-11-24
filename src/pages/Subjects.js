@@ -1,49 +1,53 @@
-import { collection, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { db } from '../firebase'
 
 function Subjects() {
 
-    const { grade } = useParams()
+  const { id, grade } = useParams()
+  const [subjectsData, setSubjectsData] = useState([]);
+  const navigate = useNavigate()
 
-    const [subjects,setSubjects] = useState([])
+  useEffect(() => {
+    const fetchGrades = async () => {
 
-    console.log("Grade Id: ", grade)
-    console.log("Subjects: ", subjects);
+      try {
+        const docRef = doc(db, 'Content', id);
+        const docSnapshot = await getDoc(docRef);
 
-    useEffect(() => {
-        const fetchSubjectsData = async () => {
-            const subjectsQuery = query(collection(db, "collectionTest"), where("gradeName", "==", "Grade 1"));
-           
-            try {
-                const querySnapshot = await getDocs(subjectsQuery);
-                const subjectsData = querySnapshot.docs.map((doc) => {
-                    return {
-                        id: doc.id,
-                        data: doc.data()
-                    }
-                });
-                console.log("Subjects: ", subjectsData);
-                setSubjects(subjectsData);
-            } catch (error) {
-                console.error("Error fetching subjects:", error);
-            }
-           
+        if (docSnapshot.exists()) {
+          const gradeData = docSnapshot.data();
+          const subjectsForGrade = gradeData.subjects && gradeData.subjects[grade];
+
+          if (subjectsForGrade) {
+            setSubjectsData(subjectsForGrade);
+          } else {
+            setSubjectsData([]);
+          }
+        } else {
+          console.log('No such document exists!');
         }
-        fetchSubjectsData()
-    },[grade])
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
 
-    return (
-        <div>
-            {subjects.map((subject) => (
-                <div key={subject.id}>
-                    <h3>{subject.id}</h3>
-                    <pre>{JSON.stringify(subject.data, null, 2)}</pre>
-                </div>
-            ))}
-        </div>
-    )
+    fetchGrades();
+  }, [id]);
+
+  // console.log("Subjects: ", subjectsData);
+
+  return (
+    <div>
+      <h1>Subjects for {grade}</h1>
+      <ul style={{ display: 'flex', flexDirection: 'column' }}>
+        {subjectsData.map((subject, index) => (
+          <Link key={index}>{subject}</Link>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
 export default Subjects

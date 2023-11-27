@@ -36,14 +36,12 @@ function Subjects() {
     fetchGrades();
   }, [id]);
 
-  // console.log("Subjects: ", subjectsData);
-
   return (
     <div>
       <h1>Subjects for {grade}</h1>
       <ul style={{ display: 'flex', flexDirection: 'column' }}>
         {subjectsData.map((subject, index) => (
-          <Link key={index}>{subject}</Link>
+          <Link key={index} to={{pathname: `/subjectview/${id}/${subject}`}}>{subject}</Link>
         ))}
       </ul>
     </div>

@@ -4,6 +4,7 @@ import Courses from './pages/Courses';
 import Grades from './pages/Grades';
 import Subjets from './pages/Subjects';
 import ViewSubject from './pages/ViewSubject';
+import SubjectView from './pages/SubjectView';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/" element={<Courses />} />
         <Route path="/grades/:id" element={<Grades />} />
         <Route path="/subjects/:id/:grade" element={<Subjets />} />
-        <Route path="/viewsubject/:id/:id" element={<ViewSubject />} />
+        <Route path="/subjectview/:id/:subject" element={<SubjectView />} />
       </Routes>
     </Router>
   );
